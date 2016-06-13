@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Battle camp base</title>
+
+    <!-- Bootstrap core CSS -->
+    {% load staticfiles %}
+    <!-- Bootstrap core CSS -->
+    <link href="{% static "bootstrap.min.css" %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static "starter-template.css" %}" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top ">
+      <div class="container">
+
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class = "active"><a  href="/main/1"><strong>Battle camp Base</strong></a></li>
+            <li><a href="/database/1">Database</a></li>
+            <li><a href="/trade/1">Trades</a></li>
+            {% if user %}
+            <li><a href="/user/{{ user.id }}">Me</a></li>
+            {% else %}
+            <li><a href="#signup" data-toggle="modal" data-target=".bs-modal-sm">Sign up / Join</a></li>
+            {% endif %}
+
+          </ul>
+           <form class="navbar-form navbar-right" role="search" action="/search/" method="get">
+           {% csrf_token %}
+                <input type="text" class="form-control" placeholder="Search for User" name="q">
+                <button type="submit" class="btn btn-default">Search</button>
+          </form>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+    <br><br>
+    <br>
+ <img class="media-object head" src="{% static "battle-camp-hack.jpg" %}" alt="monster">
+<br>
+
+
+
+
+
+
+
+<!--login/registration form -->
+<div class="modal fade bs-modal-sm lr" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+        <br>
+        <div class="bs-example bs-example-tabs">
+            <ul id="myTab" class="nav nav-tabs">
+              <li class="active"><a href="#signin" data-toggle="tab">Sign In</a></li>
+              <li class=""><a href="#signup" data-toggle="tab">Register</a></li>
+            </ul>
+        </div>
+      <div class="modal-body">
+        <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade active in" id="signin">
+            <form class="form-horizontal" action='/login/' method="post">
+            {% csrf_token %}
+            <fieldset>
+            <!-- Sign In Form -->
+            <!-- Text input-->
+            <div class="control-group">
+              <label class="control-label" for="username">Username:</label>
+              <div class="controls">
+                <input required="" id="user" name="usernamee" type="text" class="form-control" class="input-medium" required="">
+              </div>
+            </div>
+
+            <!-- Password input-->
+            <div class="control-group">
+              <label class="control-label" for="password">Password:</label>
+              <div class="controls">
+                <input required="" id="password" name="passworde" class="form-control" type="password" class="input-medium">
+              </div>
+            </div>
+
+            <!-- Button -->
+            <div class="control-group">
+              <label class="control-label" for="signin"></label>
+              <div class="controls">
+                <button  href = "/login/"id="signin" name="signin" class="btn btn-success">Sign In</button>
+              </div>
+            </div>
+            </fieldset>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="signup">
+
+            {% csrf_token %}
+            <fieldset>
+            <!-- Sign Up Form -->
+            <div class="control-group">
+              <label class="control-label" for="username">Usename(in game name):</label>
+              <div class="controls">
+                <input id="userid" name="username" class="form-control usernamel" type="text"  class="input-large" required="">
+              </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label" for="facebookurl">Facebook URL:</label>
+              <div class="controls">
+                <input id="facebookurl" class="form-control facebookurll" name="facebookurl" type="url"  class="input-large" required="">
+              </div>
+              
+            <!-- Password input-->
+            <div class="control-group">
+              <label class="control-label" for="password">Password:</label>
+              <div class="controls">
+                <input id="password" name="password" class="form-control passwordl" type="password"  class="input-large" required="">
+              </div>
+            </div>
+            
+            <!-- Text input-->
+            <div class="control-group">
+              <label class="control-label" for="password_confirm">Confirm Password:</label>
+              <div class="controls">
+                <input id="password" name="password" class="form-control password_confirml" type="password"  class="input-large" required="">
+              </div>
+            </div>
+            <!-- Button -->
+            <div class="control-group">
+              <label class="control-label" for="confirmsignup"></label>
+              <div class="controls">
+                <button id="confirmsignup" name="confirmsignup" class="btn btn-success confirmsignup" data-dismiss="modal">Sign Up</button>
+              </div>
+            </div>
+            </fieldset>
+            </form>
+      </div>
+    </div>
+      </div>
+      <div class="modal-footer">
+      <center>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </center>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <div class="container">
+
+      <div class="row">
+
+
+        <div class="col-sm-8  blog-main">
+          <a name = "ArtContest"></a>
+          {% for post in post_list %}
+          <div class="blog-post">
+            <h2 class="blog-post-title text-center">{{ post.header }}</h2>
+            <p class="blog-post-meta">{{ post.date }} by <a href="/user/{{ post.owner.id }}">{{ post.owner.first_name }} {{ post.owner.last_name }}</a></p>
+            <p> {{ post.text }} </p>
+            <p class="blog-post-meta">Likes:</p>
+        <div class="col-sm-5 col-sm-offset-9 blog-sidebar row">
+          <span class="changelike id{{ post.id }}">
+           {% if like %}
+           <a class='btn btn-default btn-lg btn btn-default removelike_button' role = "button" data-id = "{{ post.id }}">Liked</a>
+           {% else %}
+           <a class="addlike_button btn btn-primary btn-lg btn-primary" role="button" data-id = "{{ post.id }}">Like</a>
+           {% endif %}
+           </span>
+             <a href="/post/{{ post.id }}" class="btn btn-lg btn-primary next">Comment</a>
+             </div>
+          </div><!-- /.blog-post -->
+          <br>
+          {% endfor %}
+          <br>
+         
+
+  <nav>
+              {% if prev != 0 %}<a href="/main/{{ prev }}/" class="btn btn-lg btn-primary left-block">&laquo;Previous</a>{% endif %}
+              {% if all >= current %}<a href="/main/{{ succ }}/" class="btn btn-lg btn-primary pull-right">Next&raquo;</a>{% endif %}
+  </nav>
+
+        </div><!-- /.blog-main -->
+
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          <div class="sidebar-module sidebar-module-inset">
+            <h4>{{ advice.header }}</h4>
+            <p>{{ advice.text }}</p>
+          </div>
+        </div><!-- /.blog-sidebar -->
+
+      </div><!-- /.row -->
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="{% static "bootstrap.min.js" %}"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+                    <script type="text/javascript">
+$(document).ready(function(){
+    $('.container').on('click', '.addlike_button', function(){
+       var id = $(this).attr("data-id");
+                 $.ajax({
+    type: "POST",
+    url: "/addlikep/",
+    data: { 'id': id },
+    
+    success: function(data) {
+         $(".changelike.id"+id).html("<a class='btn btn-default btn-lg btn btn-default removelike_button' role = 'button' data-id = "+ id +">Liked</a>");
+         $(".likecountchange").html(data);
+       //  $(".btn").prepend(data)
+    },
+
+    error: function(data){
+    alert("fail");
+
+    }
+
+
+}); 
+    });
+
+       $('.container').on('click', '.removelike_button', function(){
+       var id = $(this).attr("data-id");
+           $.ajax({
+    type: "POST",
+    url: "/removelikep/",
+    data: { 'id': id },
+    
+    success: function(data) {
+         $(".likechange.id").html("<a class='btn btn-primary btn-lg btn btn-default addlike_button' role = 'button' data-id = "+ id +">Like</a>");
+         $(".likecountchange").html(data);
+       //  $(".btn").prepend(data)
+    },
+
+    error: function(data){
+    alert("fail");
+
+    }
+
+
+}); 
+    });
+    });
+
+
+    </script>
+                        <script type="text/javascript">
+$(document).ready(function(){
+    $('.lr').on('click', '.confirmsignup', function(){
+                 $.ajax({
+    type: "POST",
+    url: "/register/",
+    data: { 'username': $('.usernamel').val(), 'password': $('.passwordl').val(), 'facebookurl': $('.facebookurll').val(), 'password_confirm': $('.password_confirml').val()  },
+    
+    success: function(data) {
+    alert(data)
+    },
+
+    error: function(data){
+    alert("fail");
+
+    }
+
+
+}); 
+    });
+});
+
+    </script>
+
+  </body>
+</html>

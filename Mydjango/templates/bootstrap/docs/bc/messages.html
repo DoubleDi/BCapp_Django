@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Battle camp base</title>
+    {% load staticfiles %}
+    <!-- Bootstrap core CSS -->
+    <link href="{% static "bootstrap.min.css" %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static "starter-template.css" %}" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top ">
+      <div class="container">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          
+         <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a  href="/main/1"><strong>Battle camp Base</strong></a></li>
+            <li><a href="/database/1">Database</a></li>
+            <li><a href="/trade/1">Trades</a></li>
+            {% if login_user %}
+            <li  class = "active"><a href="/user/{{ login_user.id }}">Me</a></li>
+            {% else %}
+            <li><a href="#signup" data-toggle="modal" data-target=".bs-modal-sm">Sign up / Join</a></li>            {% endif %}
+          </ul>
+          <form class="navbar-form navbar-right" role="search" action="/search/" method="get">
+          {% csrf_token %}
+                <input type="text" class="form-control" placeholder="Search for User" name="q">
+                <button type="submit" class="btn btn-default">Search</button>
+          </form>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+    <br><br>
+ 
+
+
+
+
+
+
+
+
+
+<!--login/registration form -->
+<div class="modal fade bs-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+        <br>
+        <div class="bs-example bs-example-tabs">
+            <ul id="myTab" class="nav nav-tabs">
+              <li class="active"><a href="#signin" data-toggle="tab">Sign In</a></li>
+              <li class=""><a href="#signup" data-toggle="tab">Register</a></li>
+            </ul>
+        </div>
+      <div class="modal-body">
+        <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade active in" id="signin">
+            <form class="form-horizontal" action='/login/' method="post">
+            {% csrf_token %}
+            <fieldset>
+            <!-- Sign In Form -->
+            <!-- Text input-->
+            <div class="control-group">
+              <label class="control-label" for="username">Username:</label>
+              <div class="controls">
+                <input required="" id="user" name="username" type="text" class="form-control" class="input-medium" required="">
+              </div>
+            </div>
+
+            <!-- Password input-->
+            <div class="control-group">
+              <label class="control-label" for="password">Password:</label>
+              <div class="controls">
+                <input required="" id="password" name="password" class="form-control" type="password" class="input-medium">
+              </div>
+            </div>
+
+            <!-- Button -->
+            <div class="control-group">
+              <label class="control-label" for="signin"></label>
+              <div class="controls">
+                <button  href = "/login/"id="signin" name="signin" class="btn btn-success">Sign In</button>
+              </div>
+            </div>
+            </fieldset>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="signup">
+            <form class="form-horizontal"  action='/register/' method="post">
+            {% csrf_token %}
+            <fieldset>
+            <!-- Sign Up Form -->
+            <div class="control-group">
+              <label class="control-label" for="username">Usename(in game name):</label>
+              <div class="controls">
+                <input id="userid" name="username" class="form-control" type="text"  class="input-large" required="">
+              </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label" for="facebookurl">Facebook URL:</label>
+              <div class="controls">
+                <input id="facebookurl" class="form-control" name="facebookurl" type="url"  class="input-large" required="">
+              </div>
+              
+            <!-- Password input-->
+            <div class="control-group">
+              <label class="control-label" for="password">Password:</label>
+              <div class="controls">
+                <input id="password" name="password" class="form-control" type="password"  class="input-large" required="">
+              </div>
+            </div>
+            
+            <!-- Text input-->
+            <div class="control-group">
+              <label class="control-label" for="password_confirm">Confirm Password:</label>
+              <div class="controls">
+                <input id="password_confirm" class="form-control" name="password_confirm" type="password"  class="input-large" required="">
+              </div>
+            </div>
+            <!-- Button -->
+            <div class="control-group">
+              <label class="control-label" for="confirmsignup"></label>
+              <div class="controls">
+                <button id="confirmsignup" name="confirmsignup" class="btn btn-success">Sign Up</button>
+              </div>
+            </div>
+            </fieldset>
+            </form>
+      </div>
+    </div>
+      </div>
+      <div class="modal-footer">
+      <center>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </center>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+<div class="col-sm-offset-1">
+
+      <div class="row">
+
+
+   <h2 class="blog-post-title text-center">Last user messages</h2>
+        <a class="btn btn-lg btn-primary" href="/user/{{ user.id }}" role="button">Back to User</a>
+        <a class="btn btn-lg btn-primary" href="/messages/{{ user.id }}/mine" role="button">My offers to people</a>   
+        <a class="btn btn-lg btn-primary" href="/messages/{{ user.id }}/other" role="button">People's offers</a>   
+        <br>
+        <br>
+        <br>
+        {% for message in mymessage_list %}
+        <div>
+        <div class="col-sm-4 blog-main">
+        <h2><p>Offer:</p></h2>
+        <div class="media-left">  
+         <img class="media-object monster" src="/media/{{ message.sender.picture }}" alt="monster">
+        </div>
+        <div class="media-body">
+            <br>{{ message.sender.name }}
+            <br>{{ message.sender.stype }}
+            <br> {{ message.sender.active }} / {{ message.sender.passive }}
+        </div>
+        </div>
+
+        <div class="col-sm-4  blog-main">
+        <h2><p>For:</p></h2>
+              <div class="media blog-post col-sm-">
+        <div class="media-left">  
+         <img class="media-object monster" src="/media/{{ message.owner.picture }}" alt="monster">
+        </div>
+        <div class="media-body">
+            <br>{{ message.owner.name }}
+            <br>{{ message.owner.stype }}
+            <br> {{ message.owner.active }} / {{ message.owner.passive }}
+        </div>
+      </div>
+        </div><!-- /.blog-main -->
+        <div class="col-sm-4  blog-main">
+        <div class="media blog-post col-sm-">
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="media-body">
+        {% if not message.accepted %}
+        <a class="btn btn-lg btn-default" href="" role="button">Offer is being checked</a>
+        {% else %}
+        {% if message.accepted == "yes" %}
+        <a class="btn btn-lg btn-success" href="" role="button">Offer is accepted</a>
+        {% else %}
+        <a class="btn btn-lg btn-danger" href="" role="button">Offer is declined</a>
+        {% endif %}
+        {% endif %}
+        <br>
+        <br>
+        <br>
+        </div>
+      </div>
+        </div>
+        <div class="blog-main"> 
+        <p class="blog-post-meta">To: <a href="/user/{{ message.owner.owner.id }}">{{ message.owner.owner.username }}</a></p>
+        <h2><p>Message:</p></h2>
+        <p>{{ message.text }}</p>
+        </div>
+        </div>
+        {% endfor %}
+
+
+
+
+        {% for message in message_list %}
+        <div>
+        <div class="col-sm-4 blog-main">
+        <h2><p>Offer:</p></h2>
+        <div class="media-left">  
+         <img class="media-object monster" src="/media/{{ message.sender.picture }}" alt="monster">
+        </div>
+        <div class="media-body">
+            <br>{{ message.sender.name }}
+            <br>{{ message.sender.stype }}
+            <br> {{ message.sender.active }} / {{ message.sender.passive }}
+        </div>
+        </div>
+
+        <div class="col-sm-4  blog-main">
+        <h2><p>For:</p></h2>
+              <div class="media blog-post col-sm-">
+        <div class="media-left">  
+         <img class="media-object monster" src="/media/{{ message.owner.picture }}" alt="monster">
+        </div>
+        <div class="media-body">
+            <br>{{ message.owner.name }}
+            <br>{{ message.owner.stype }}
+            <br> {{ message.owner.active }} / {{ message.owner.passive }}
+        </div>
+      </div>
+        </div><!-- /.blog-main -->
+        <div class="col-sm-4  blog-main">
+        <div class="media blog-post col-sm-">
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="media-body edit_block id{{ message.id }}">
+        {% if not message.accepted %}
+        <a class="btn btn-lg btn-primary accept_button" role="button" data-goal = "yes" data-id = "{{ message.id }}">Accept</a>
+        <a class="btn btn-lg btn-primary accept_button" role="button" data-goal = "no" data-id = "{{ message.id }}">Reject</a>
+        {% else %}
+        {% if message.accepted == "yes" %}
+        <a class="btn btn-lg btn-success" role="button">Offer is accepted</a>
+        {% else %}
+        <a class="btn btn-lg btn-danger" role="button">Offer is declined</a>
+        {% endif %}
+        {% endif %}
+        <br>
+        <br>
+        <br>
+        </div>
+      </div>
+        </div>
+        <div class="blog-main"> 
+        <br>
+        <p class="blog-post-meta">from: <a href="/user/{{ message.sender.owner.id }}">{{ message.sender.owner.username }}</a></p>
+        <h2><p>Message:</p></h2>
+        <p>{{ message.text }}</p>
+        </div>
+        </div>
+        {% endfor %}
+        </div><!-- /.blog-sidebar -->
+
+      </div><!-- /.row -->
+
+    </div><!-- /.container -->
+
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="{% static "bootstrap.min.js" %}"></script>
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+                <script type="text/javascript">
+$(document).ready(function(){
+    var id = 0
+    $(".accept_button").click(function(){
+       id = $(this).attr("data-id");
+       goal = $(this).attr("data-goal");
+      $.ajax({
+    type: "POST",
+    url: "/accepttrade/",
+    data: { 'id': id, 'goal': goal },
+    
+    success: function(data) {
+          //alert(data);
+         $(".edit_block.id"+id).html(data)
+       //  $(".btn").prepend(data)
+    },
+
+    error: function(data){
+    alert("fail");
+
+    }
+
+
+});
+}); 
+    });
+
+
+    </script>
+
+    </script>
+  </body>
+</html>

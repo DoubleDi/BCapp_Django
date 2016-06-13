@@ -1,0 +1,13 @@
+  <div class="media">
+                           <p class="pull-right blog-post-meta"><small>{{ comment.date }}</small></p>
+                            <a class="media-left" href="/user/{{ comment.owner.id }}">
+                              <img src="/media/{{ comment.owner.avatar }}">
+                            </a>
+                  <div class="media-body">
+                                
+                              <a href="/user/{{ comment.owner.id }}"><h4 class="media-heading user_name">{{ comment.owner.username }}</h4></a>
+                              {{ text }}
+                              <p class="blog-post-meta">Likes: <a class="btn btn btn-primary pull-right" id="hide">Like</a></p>
+                  </div>
+                </div>
+              

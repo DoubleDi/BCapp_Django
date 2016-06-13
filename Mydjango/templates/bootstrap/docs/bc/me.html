@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Battle camp base</title>
+    {% load staticfiles %}
+    <!-- Bootstrap core CSS -->
+    <link href="{% static "bootstrap.min.css" %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static "starter-template.css" %}" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top ">
+      <div class="container">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          
+         <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a  href="/main/1"><strong>Battle camp Base</strong></a></li>
+            <li><a href="/database/1">Database</a></li>
+            <li><a href="/trade/1">Trades</a></li>
+            {% if login_user %}
+            <li  class = "active"><a href="/user/{{ login_user.id }}">Me</a></li>
+            {% else %}
+            <li><a href="#signup" data-toggle="modal" data-target=".bs-modal-sm">Sign up / Join</a></li>            {% endif %}
+          </ul>
+          <form class="navbar-form navbar-right" role="search" action="/search/" method="get">
+          {% csrf_token %}
+                <input type="text" class="form-control" placeholder="Search for User" name="q">
+                <button type="submit" class="btn btn-default">Search</button>
+          </form>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+    <br><br>
+ 
+
+
+
+
+
+
+
+
+
+<!--login/registration form -->
+<div class="modal fade bs-modal-sm" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+        <br>
+        <div class="bs-example bs-example-tabs">
+            <ul id="myTab" class="nav nav-tabs">
+              <li class="active"><a href="#signin" data-toggle="tab">Sign In</a></li>
+              <li class=""><a href="#signup" data-toggle="tab">Register</a></li>
+            </ul>
+        </div>
+      <div class="modal-body">
+        <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade active in" id="signin">
+            <form class="form-horizontal" action='/login/' method="post">
+            {% csrf_token %}
+            <fieldset>
+            <!-- Sign In Form -->
+            <!-- Text input-->
+            <div class="control-group">
+              <label class="control-label" for="username">Username:</label>
+              <div class="controls">
+                <input required="" id="user" name="username" type="text" class="form-control" class="input-medium" required="">
+              </div>
+            </div>
+
+            <!-- Password input-->
+            <div class="control-group">
+              <label class="control-label" for="password">Password:</label>
+              <div class="controls">
+                <input required="" id="password" name="password" class="form-control" type="password" class="input-medium">
+              </div>
+            </div>
+
+            <!-- Button -->
+            <div class="control-group">
+              <label class="control-label" for="signin"></label>
+              <div class="controls">
+                <button  href = "/login/"id="signin" name="signin" class="btn btn-success">Sign In</button>
+              </div>
+            </div>
+            </fieldset>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="signup">
+            <form class="form-horizontal"  action='/register/' method="post">
+            {% csrf_token %}
+            <fieldset>
+            <!-- Sign Up Form -->
+            <div class="control-group">
+              <label class="control-label" for="username">Usename(in game name):</label>
+              <div class="controls">
+                <input id="userid" name="username" class="form-control" type="text"  class="input-large" required="">
+              </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label" for="facebookurl">Facebook URL:</label>
+              <div class="controls">
+                <input id="facebookurl" class="form-control" name="facebookurl" type="url"  class="input-large" required="">
+              </div>
+              
+            <!-- Password input-->
+            <div class="control-group">
+              <label class="control-label" for="password">Password:</label>
+              <div class="controls">
+                <input id="password" name="password" class="form-control" type="password"  class="input-large" required="">
+              </div>
+            </div>
+            
+            <!-- Text input-->
+            <div class="control-group">
+              <label class="control-label" for="password_confirm">Confirm Password:</label>
+              <div class="controls">
+                <input id="password_confirm" class="form-control" name="password_confirm" type="password"  class="input-large" required="">
+              </div>
+            </div>
+            <!-- Button -->
+            <div class="control-group">
+              <label class="control-label" for="confirmsignup"></label>
+              <div class="controls">
+                <button id="confirmsignup" name="confirmsignup" class="btn btn-success">Sign Up</button>
+              </div>
+            </div>
+            </fieldset>
+            </form>
+      </div>
+    </div>
+      </div>
+      <div class="modal-footer">
+      <center>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </center>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+<!--edit text -->
+<div class="modal fade bs-modal-lg ed">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action='/edittext/' method="post">
+      {% csrf_token %}
+      <div class="modal-header">
+        <h3 class="modal-title text-center">Edit text</h3>
+      </div>
+      <div class="modal-body">
+         <textarea class="form-control edittext" placeholder="Write a comment" name = "text">{{ user.text }}</textarea>
+      </div>
+      <div class="modal-footer">
+      <br>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+      </form>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+<!-- edit monster -->
+<div class="modal fade bs-modal-lg editmonster">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!--<form action='/addmonster/' method="post">-->
+      {% csrf_token %}
+      <div class="modal-header">
+        <h3 class="modal-title text-center">Edit monster</h3>
+      </div>
+      <div class="modal-body row">
+<h4><p class="text-center">Leave fields empty if you don't want to change them</p></h4>
+<div class="col-sm-10 col-sm-offset-1">
+<input type="text" class="form-control edit_zodiac" placeholder="Zodiac" name="zodiac">
+<input type="text" class="form-control edit_passive" placeholder="Passive" name="passive">
+<input type="text" class="form-control edit_active" placeholder="Active" name="active">
+<input type="text" class="form-control edit_pr	" placeholder="Powerraiting" name="pr">
+
+       </div>
+       </div>
+      <div class="modal-footer">
+      <br>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary edit_monster"  data-dismiss="modal">Save changes</button>
+      </div>
+   <!--   </form>-->
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<!--add monster -->
+<div class="modal fade bs-modal-lg addmonster">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!--<form action='/addmonster/' method="post">-->
+      {% csrf_token %}
+      <div class="modal-header">
+        <h3 class="modal-title text-center">Add new monster</h3>
+      </div>
+      <div class="modal-body row">
+
+<div class="col-sm-5 col-sm-offset-1">
+<h3><p class="text-center">Input monster name</p></h3>
+<input type="text" class="form-control input_monstername" placeholder="Monster" name="monster">
+ <!--     <div class="btn-group">
+<!--  <button type="button" class="btn btn-primary btn-block dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+    Choose your monster from database <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    {% for monster in database %}
+    <li><a href="#{{ monster.name }}">{{ monster.name }}</a></li>
+    {% endfor %}
+  </ul>-->
+<!-- </div> -->
+</div>
+<div class="col-sm-4 col-sm-offset-1">
+<input type="text" class="form-control input_zodiac" placeholder="Zodiac" name="zodiac">
+<input type="text" class="form-control input_passive" placeholder="Passive" name="passive">
+<input type="text" class="form-control input_active" placeholder="Active" name="active">
+<input type="text" class="form-control input_pr	" placeholder="Powerraiting" name="pr">
+
+       </div>
+       </div>
+      <div class="modal-footer">
+      <br>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary add_monster">Save changes</button>
+      </div>
+   <!--   </form>-->
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+
+<!--add offer -->
+<div class="modal fade bs-modal-lg addoffer">
+  <div class="modal-dialog">
+    <div class="modal-content">
+     <!-- <form action='/addtradepost/' method="post"> -->
+      {% csrf_token %}
+      <div class="modal-header">
+        <h3 class="modal-title text-center">Add offer</h3>
+      </div>
+      <div class="modal-body row">
+
+<div class="col-sm-5">
+<!--<h3><p class="tex-center">Input monster name</p></h3>
+<input type="text" class="form-control" placeholder="Monster" name="monster">
+-->   
+ <!-- <select class="selectpicker" data-show-subtext="true" style="display: none;">
+          {% for monster in monsters %}
+        <option data-subtext="{{ monster.active }}/{{ monster.passive }}" name = "monster">{{ monster.name }}</option>
+            {% endfor %}
+    </select>-->
+    <div id="search_content">
+        <!--<form action="/search_monster/">-->
+            {% csrf_token %}
+            <input class="inputmname form-control" id="query" name="query" type="text" placeholder="Search">
+    </div>
+
+
+
+</div>
+<div class="col-sm-7">
+    <textarea class="form-control inputtxt" placeholder="Write an offer" name = "text"></textarea>  
+       </div>
+       </div>
+      <div class="modal-footer">
+      <br>
+        <button type="button" class="btn btn-default btn_close" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary add_offer" data-dismiss="modal">Save changes</button>
+      </div>
+      </form>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+
+
+<!--edit tradepost -->
+<div class="modal fade bs-modal-lg edittradepost">
+  <div class="modal-dialog">
+    <div class="modal-content">
+     <!-- <form action='/addtradepost/' method="post"> -->
+      {% csrf_token %}
+      <div class="modal-header">
+        <h3 class="modal-title text-center">Edit tradepost</h3>
+      </div>
+      <div class="modal-body row">
+
+<div class="col-sm-offset-1 col-sm-10">
+   <h4><p class="text-center">Leave fields empty if you don't want to change them</p></h4>
+     <input type="text" class="form-control edit_header" placeholder="tradepost header" name="header">
+    <textarea class="form-control edittext edit_text" placeholder="tradepost text" name = "text"></textarea>  
+       </div>
+       </div>
+      <div class="modal-footer">
+      <br>
+        <button type="button" class="btn btn-default btn_close" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary edit_tradepost" data-dismiss="modal">Save changes</button>
+      </div>
+      </form>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+      <div class="row">
+
+        <div class="col-sm-12 blog-main">          
+
+  <div class="col-sm-3 ">
+    <div class="media">
+    <br><br>
+      <img class="avatar_big" src="/media/{{ user.avatar }}" alt="no avatar">
+        <div class="jumbotron colorswitch">
+        <p>Name: {{ user.first_name }} {{ user.last_name }} </p>
+        <p> <a href = {{ user.facebookurl }}>Facebook id</a></p>
+        <p>In game name: {{ user.username }}</p>
+        <p class="">Views: {{ user.view }}</p>
+        <p class="likecountchange">Likes: {{ likes }} </p>
+        {% if flag %}
+        <a class="btn btn-lg btn-primary btn-block" href="#editext" data-toggle="modal" data-target=".ed" role="button">Edit text</a>   
+        <a class="btn btn-lg btn-primary btn-block" href="../../components/#navbar" role="button">Edit Profile</a>
+        <a class="btn btn-lg btn-primary btn-block" href="/messages/{{ user.id }}/other" role="button">Messages</a>
+        <a href="/logout/" class="btn btn-lg btn-block btn-primary btn-primary">Logout</a>
+        {% else %}
+        <p>
+        <div class="likechange">
+        {% if like %}
+        <a class='removelike_button btn btn-default btn-block btn-default'>Liked</a>
+        {% else %}
+        <a class="addlike_button btn btn-primary btn-block btn-primary">Like</a>
+        {% endif %}
+        </div>
+        </p>
+        {% endif %}
+        <a class="btn btn-lg btn-primary btn-block" href="/screenshots/{{ user.id }}" role="button">Screenshots</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-8">
+       <div class="jumbotron colorswitch">
+       <h2 class="blog-post-title text-center">Status</h2>
+         {% if not user.text %}
+          <p><h2 class="text-center">User doesn't have any Status</h2></p>
+         {% else %}
+         <p>{{ user.text }}</p>
+         {% endif %}
+          <p>
+          {% if not flag %}
+          <a class="btn btn-lg btn-primary" href="#UserMonsters" role="button">Go to his monsters &raquo;</a>   
+          {% endif %}
+        </p>
+        <div class = "row">
+        <h2 class="blog-post-title text-center">Screenshots</h2>
+          {% for image in pagephoto %}
+          <a href="#">
+            <img class="screenshot" src="/media/{{ image.picture }}" alt="monster">
+          </a>
+          {% endfor %}
+          {% if not pagephoto %}
+          <p><h2 class="text-center">User doesn't have any Screenshots</h2></p>
+          {% endif %}
+        </div>
+      </div>
+ </div>
+      </div><!-- /.row -->
+    </div><!-- /.container -->
+    <div class = "container">
+      <h2 class="blog-post-title text-center"><a name="UserMonsters">Users monsters</a></h2>
+      {% if flag %}
+      <a class="btn btn-lg btn-primary btn-block" href="#editmonster" data-toggle="modal" data-target=".addmonster" role="button">Add Monsters</a>
+      <br>
+      {% endif %}
+      <div class="m_list">
+      <div class="content">
+      {% for monster in monster_list %}
+      <div class="media mon_ster id{{ monster.id }}">
+        <div class="media-left">
+         <img class="media-object monster" src="/media/{{ monster.picture }}" alt="monster">
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading"> {{ monster.name }} 
+          {% if flag %}
+          <a class="btn btn-lg btn-primary edit_button" data-id = "{{ monster.id }}" data-toggle="modal" data-target=".editmonster" role="button"> Edit Monster</a>
+          <a class="btn btn-lg btn-primary delete_button" data-id = "{{ monster.id }}" role="button"> Delete Monster</a>
+          {% else %}
+          <a class="btn btn-lg btn-primary addoffer_button" data-id = "{{ monster.id }}" data-toggle="modal" data-target=".addoffer" role="button"> Send an offer</a>
+          {% endif %}
+          </h4>
+            <br>
+          <div class="mo id{{ monster.id }}">
+          <p>Powerraiting: {{ monster.powerraiting }}</p>
+          <p>{{ monster.zodiac }}, {{ monster.active }} / {{ monster.passive }}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      <div class="more_monsters">
+      {% if number_monsters > 10 %}
+            <div class="text-center"><a class="btn btn-lg btn-primary moremonsters" role = "button" data-id = "2">More</a></div>
+      {% endif %}
+      </div>
+      </div>
+      </div>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="{% static "bootstrap.min.js" %}"></script>
+    <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
+
+            <script type="text/javascript">
+$(document).ready(function(){
+	$('.addmonster').on('click', '.add_monster', function(){
+      $.ajax({
+    type: "POST",
+    url: "/addmonster/",
+    data: { 'active': $(".input_active").val(), 'passive': $(".input_passive").val(), 'monster': $(".input_monstername").val(), 'zodiac': $(".input_zodiac").val(), 'pr': $(".input_pr").val() },
+
+    success: function(data) {
+         $(".content").prepend(data)
+       //  $(".btn").prepend(data)
+    },
+
+    error: function(data){
+    alert("fail");
+
+    }
+
+
+});
+         //$.post('/addcomment/{{ post.id }}', {'text': txt }, function(c){
+    });
+    });
+
+
+    </script>
+             <script type="text/javascript">
+$(document).ready(function(){
+    var p = 0
+    var id = 0
+    $('.m_list').on('click', '.edit_button', function(){
+       id = $(this).attr("data-id");
+       p = ".mo.id" + id
+          }); 
+    $('.editmonster').on('click', '.edit_monster', function(){
+      $.ajax({
+    type: "POST",
+    url: "/editmonster/",
+    data: { 'zodiac': $(".edit_zodiac").val(), 'passive': $(".edit_passive").val(), 'active': $(".edit_active").val(), 'pr': $(".edit_pr").val(), 'id': id },
+       success: function(data) {
+         $(p).html(data)
+       //  $(".btn").prepend(data)
+    },
+
+    error: function(data){
+    alert("fail");
+
+    }
+});
+}); 
+    });
+
+
+    </script>
+
+             <script type="text/javascript">
+$(document).ready(function(){
+	$('.m_list').on('click', '.delete_button', function(){
+      var id = $(this).attr("data-id");
+      var p = ".mon_ster.id" + id 
+      $.ajax({
+    type: "POST",
+    url: "/deletemonster/",
+    data: { 'id': id },
+    
+    success: function(data) {
+         $(p).remove()
+         alert("Your monster was deleted");
+       //  $(".btn").prepend(data)
+    },
+
+    error: function(data){
+    alert("fail");
+
+    }
+
+
+}); 
+    });
+    });
+
+
+    </script>
+
+    <script type="text/javascript">
+$(document).ready(function(){
+	$('.m_list').on('click', '.moremonsters', function(){
+    	var id = $(this).attr("data-id");
+           $.ajax({
+    type: "POST",
+    url: "/moremonsters/",
+    data: { 'id': id, 'user': {{ user.id }} },
+    
+    success: function(data) {
+    	 $(".more_monsters").remove()
+         $(".content").append(data);
+       //  $(".btn").prepend(data)
+    },
+
+    error: function(data){
+    alert("fail");
+
+    }
+
+
+}); 
+    });
+    });
+
+
+    </script>
+    <script type="text/javascript">
+$(document).ready(function(){
+    $('.likechange').on('click', '.addlike_button', function(){
+                 $.ajax({
+    type: "POST",
+    url: "/addlikeu/",
+    data: { 'id': {{ user.id }} },
+    
+    success: function(data) {
+         $(".likechange").html("<a class='removelike_button btn btn-default btn-block btn-default'>Liked</a>");
+         $(".likecountchange").html(data);
+       //  $(".btn").prepend(data)
+    },
+
+    error: function(data){
+    alert("fail");
+
+    }
+
+
+}); 
+    });
+
+       $('.likechange').on('click', '.removelike_button', function(){
+           $.ajax({
+    type: "POST",
+    url: "/removelikeu/",
+    data: { 'id': {{ user.id }} },
+    
+    success: function(data) {
+         $(".likechange").html("<a class='addlike_button btn btn-primary btn-block btn-primary'>Like</a>");
+         $(".likecountchange").html(data);
+       //  $(".btn").prepend(data)
+    },
+
+    error: function(data){
+    alert("fail");
+
+    }
+
+
+}); 
+    });
+
+});
+    </script>
+
+      <script type="text/javascript">
+$(document).ready(function(){
+    var id = 0;
+    var p = 0; 
+    $('.m_list').on('click', '.addoffer_button', function(){
+           id = $(this).attr("data-id");
+     });
+        $('.addoffer').on('click', '.add_offer', function(){
+      $.ajax({
+    type: "POST",
+    url: "/addoffer/",
+    data: { 'text': $(".inputtxt").val(), 'monster': $(".inputmname").val(), 'id': id },
+    
+    success: function(data) {
+          alert("offer added");
+                //  $(".btn").prepend(data)
+    },
+
+    error: function(data){
+    alert("fail");
+
+    }
+
+
+}); 
+    });
+    });
+
+
+    </script>
+
+  </body>
+</html>

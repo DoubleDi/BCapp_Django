@@ -1,0 +1,8 @@
+source /home/doubledi/Documents/django/env/bin/activate
+ gunicorn Mydjango.wsgi
+from generate import GenerateUsers
+
+gcc -DDEBUG -Wall -Werror -O2 -std=gnu11 prog.c -oprog
+
+
+
